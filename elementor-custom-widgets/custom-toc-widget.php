@@ -1,4 +1,9 @@
 <?php
+/**
+ * Custom Table of Contents Widget for Elementor
+ *
+ * @package Custom_TOC_Widget
+ */
 use Elementor\Widget_Base;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
