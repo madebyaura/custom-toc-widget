@@ -32,7 +32,7 @@ add_action('elementor/element/heading/section_title/after_section_end', function
             'label_on' => ( 'Yes' ),
             'label_off' => ( 'No' ),
             'return_value' => 'yes',
-            'default' => 'yes',
+            'default' => 'no',
         ]
     );
 
@@ -67,3 +67,21 @@ add_action('elementor/frontend/widget/before_render', function( $widget ) {
         }
     }
 });
+
+// Register the custom TOC widget
+add_action('elementor/widgets/widgets_registered', function($widgets_manager) {
+    require_once get_stylesheet_directory() . '/elementor-custom-widgets/custom-toc-widget.php';
+    $widgets_manager->register( new \Custom_TOC_Widget() );
+});
+
+// Register custom TOC script
+function register_custom_toc_script() {
+    wp_register_script(
+        'custom-toc-js',
+        get_stylesheet_directory_uri() . '/js/custom-toc.js',
+        [],
+        '1.0.0',
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'register_custom_toc_script');
