@@ -56,7 +56,7 @@ add_action('elementor/element/heading/section_title/after_section_end', function
 }, 10, 2);
 
 /**
- * Inject TOC attributes and IDs into rendered heading widgets
+ * Inject IDs into rendered heading widgets
  */
 add_action('elementor/frontend/widget/before_render', function($widget) {
     // Do not proceed if the element is not a heading widget.
@@ -68,26 +68,8 @@ add_action('elementor/frontend/widget/before_render', function($widget) {
     $include = $settings['include_in_toc'] ?? 'no';
 
     if ( $include === 'yes' ) {
-        $tag = $settings['header_size'] ?? 'h2';
         $id = 'toc-heading-' . $widget->get_id();
-
-        // Add ID to the actual heading tag
-        add_filter( 'elementor/widget/render_content', function( $content, $widget_obj ) use ( $tag, $id ) {
-           if ( 'heading' !== $widget_obj->get_name() ) {
-                return $content;
-            }
-
-            $open_tag = '<' . $tag;
-            $with_id = $open_tag . ' id="' . esc_attr($id) . '"';
-
-            // Replace only the first occurrence of the opening tag
-            $pos = strpos( $content, $open_tag );
-            if ( $pos !== false ) {
-                $content = substr_replace( $content, $with_id, $pos, strlen($open_tag) );
-            }
-
-            return $content;
-        }, 10, 2);
+        $widget->add_render_attribute( 'title', 'id', $id );
     }
 });
 

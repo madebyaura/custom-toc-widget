@@ -32,11 +32,13 @@ class Custom_TOC_Widget extends Widget_Base
 
     public function render(){
         $document = Plugin::$instance->documents->get_current();
+        // Do not proceed if the document is not a page or post.
         if (!$document) {
             return;
         }
 
         $elements = $document->get_elements_data();
+        // Extract TOC items from heading elements
         $toc_items = $this->get_toc_headings($elements);
 
         if (!empty($toc_items)) {
@@ -57,18 +59,25 @@ class Custom_TOC_Widget extends Widget_Base
         }
     }
 
+    /**
+     * Recursively search for heading elements included in the TOC
+     *
+     * @param array $elements Elementor elements tree
+     * @return array List of TOC headings with ID and title
+     */
     private function get_toc_headings(array $elements): array
     {
         $items = [];
 
         foreach ($elements as $element) {
-            // Check if it's a heading widget
+            // Check if element is a heading widget
             if (
                 ($element['elType'] ?? null) === 'widget' &&
                 ($element['widgetType'] ?? null) === 'heading'
             ) {
                 $settings = $element['settings'] ?? [];
 
+                // Include in TOC items only if explicitly marked 'yes'
                 if (($settings['include_in_toc'] ?? 'no') === 'yes') {
                     $items[] = [
                         'id'    => 'toc-heading-' . ($element['id'] ?? uniqid()),
@@ -77,7 +86,7 @@ class Custom_TOC_Widget extends Widget_Base
                 }
             }
 
-            // Recurse through nested elements
+            // Recursively check nested elements.
             if (!empty($element['elements'])) {
                 $items = array_merge($items, $this->get_toc_headings($element['elements']));
             }
