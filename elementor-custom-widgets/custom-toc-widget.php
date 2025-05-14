@@ -46,10 +46,9 @@ class Custom_TOC_Widget extends Widget_Base
             <div class="custom-toc">
                 <ul>
                     <?php foreach ($toc_items as $item): ?>
-                        <li>
-                            <?php // <?= is shorthand for <?php echo ?> 
-                            <a href="#<?= esc_attr($item['id']) ?>">
-                                <?= esc_html($item['title']) ?>
+                        <li> 
+                            <a href="#<?php echo esc_attr($item['id']) ?>">
+                                <?php echo esc_html($item['title']) ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
@@ -80,7 +79,7 @@ class Custom_TOC_Widget extends Widget_Base
                 // Include in TOC items only if explicitly marked 'yes'
                 if (($settings['include_in_toc'] ?? 'no') === 'yes') {
                     $items[] = [
-                        'id'    => 'toc-heading-' . ($element['id'] ?? uniqid()),
+                        'id'    => 'toc-heading-' . ($element['id']),
                         'title' => $settings['toc_title'] ?? strip_tags($settings['title'] ?? '')
                     ];
                 }
